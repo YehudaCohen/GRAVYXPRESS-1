@@ -1,0 +1,75 @@
+@(orderQs: List[Task], kitchenItems: ArrayList[Task])
+
+@* This is the template that defines the restaurant Kitchen interface that *@
+@* shows the Order Queue and Kitchen Queue for the kitchen staff.          *@
+
+@* Receives the orders that are stored in a List data structure from  *@
+@* OrderQueue.java. Also receives the orders that have been moved     *@
+@* into the Kitchen Queue (stored in an ArrayList data structure)     *@
+@* from KitchenQueue.java.                                            *@
+
+@import helper._
+
+@* Main template begins here. *@
+@main("Kitchen Interface") {&nbsp;} {
+	
+	@* The Order Queue. *@
+	<h1>Order Queue</h1>
+	
+	@* The number of orders in the queue. *@
+	<h3>@orderQs.size() orders in order queue.</h3>
+	
+	@* Lists the order IDs and order items. *@
+	<ul>
+		<b>Order ID & Order Item</b>
+		
+		@* For each order in the queue, assign a new variable orderQ. *@
+		@for(orderQ <- orderQs) {
+			<li>
+				@* Print the ID and the name of the order. *@
+				@orderQ.orderID
+				@orderQ.label
+				
+				@* Add a transfer button to each order listed in the queue so  *@
+				@* that kitchen staff can move the order to Kitchen Queue.     *@
+				@* The if condition is used to remove the Transfer to Kitchen  *@
+				@* Queue button after it has been pressed, to prevent multiple *@
+				@* transfers.                                                  *@
+				@if(orderQ.isFetched == false) {
+					@form(routes.KitchenQueue.moveTask(orderQ.id)) {
+						<input type="submit" value="Transfer to Kitchen Queue">
+					}
+				}
+			</li>
+		}
+	</ul>
+	
+	<h1>Kitchen Queue</h1>
+	
+	@* The number of orders in the queue. *@
+	<h3>@kitchenItems.size() orders in kitchen queue.</h3>
+	
+	@* List the orders in the Kitchen Queue and add "Complete" button to each item  *@ 
+	@* to allow kitchen staff to clear the item when finished preparing.            *@
+	
+	<ul>
+		<b>Order Item</b>
+		@for(kitchenItem <- kitchenItems) {
+			<li>
+				@* Print the name of the order. *@
+				@kitchenItem.label
+				
+				@form(routes.KitchenQueue.completeTask(kitchenItem.id)) {
+					<input type="submit" value="Complete">
+				}
+			</li>
+		}
+	</ul>
+	
+	<a href="http://localhost:9000/dashboard/1">Back to Dashboard</a> 
+	
+	@* HTML code to refresh the page automatically every 5 seconds. *@
+	<META 
+     HTTP-EQUIV="Refresh"
+     CONTENT=5; URL="localhost:9000/kitchenQueue">
+}

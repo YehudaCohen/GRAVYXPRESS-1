@@ -1,0 +1,53 @@
+@(orderQs: List[Task], taskForm: Form[Task])
+
+@* This is the template that defines the restaurant Order Queue interface. *@
+
+@* Receives the orders that are stored in a List data structure from  *@
+@* OrderQueue.java. Also receives the Form definition to input orders.*@
+
+@import helper._
+
+@* Main template begins here. *@
+@main("Order Queue"){&nbsp;} {
+	
+	<h1>Order Queue</h1>
+	
+	@* The number of orders in the queue. *@
+	<h3>@orderQs.size() orders in order queue.</h3>
+	
+	@* Lists the order IDs and order items. *@
+	<ul>
+		<b>Order ID & Order Item</b>
+		
+		@* For each order in the queue, assign a new variable orderQ. *@
+		@for(orderQ <- orderQs) {
+			<li>
+				@* Print the ID and the name of the order. *@
+				@orderQ.orderID
+				@orderQ.label
+				
+				@* Add a Delete button to each order listed in the queue and *@
+				@* route to the definition of the Delete button.             *@
+				@form(routes.OrderQueue.deleteTask(orderQ.id)) {
+					<input type="submit" value="Delete">
+				}
+			</li>
+		}
+	</ul>
+	
+	<h3>Add a New Order</h3>
+	
+	@* Create a textbox and a button for submission for the input of new orders. *@
+	@form(routes.OrderQueue.newTask()) {
+		
+		@inputText(taskForm("label"))
+		<input type="submit" value="Add new Order">
+	}
+	
+	<a href="http://localhost:9000/dashboard/1">Back to Dashboard</a> 
+	
+	@* HTML code to refresh the page automatically every 20 seconds. *@
+	<META 
+     HTTP-EQUIV="Refresh"
+     CONTENT=20; URL="localhost:9000/kitchenQueue">
+}

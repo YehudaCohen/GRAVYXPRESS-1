@@ -1,0 +1,68 @@
+@(tasks: List[TableTask])
+
+@* This is the HTML/scala template that defines the Tables interface *@
+
+@import helper._
+
+@* Scala main function to start the template *@
+@main("Restaurant Tables") {&nbsp;} {
+	
+	<h1>List of Tables</h1>
+	
+	<ul>
+		@* For each data block in the database, do the following *@
+		@for(task <- tasks) {
+			<li>
+				@* Print the table name *@
+				@task.tableName 
+				
+				@* Print the table number with a colon at the end *@
+				@task.tabNum:
+				
+				@* Print status of table *@
+				@task.status
+				
+				@* If table is not occupied, place a "Sit Here" button *@
+				@if(task.isOccupied == 0) {
+					@form(routes.Tables.sitHere(task.id)) {
+						<input type="submit" value="Sit Here">
+					}
+				}
+				
+				@* If table becomes occupied, replace the "Sit Here" button with the "Customer Left" button *@
+				@if(task.isOccupied == 1) {
+					@form(routes.Tables.customerLeft(task.id)) {
+						<input type="submit" value="Customer Left">
+					}
+				}
+				
+				@* If customer leaves table and table needs cleaning, replace the "Customer Left" button *@
+				@* with the "Finished Cleaning" button so the waiter can reopen after cleaning           *@
+				@if(task.isOccupied == 2) {
+					@form(routes.Tables.finishedCleaning(task.id)) {
+						<input type="submit" value="Finished Cleaning">
+					}
+				}
+				
+				@* Delete a table *@
+				@form(routes.Tables.deleteTask(task.id)) {
+					<input type="submit" value="Delete Table">
+				}
+			</li>
+		}
+	</ul>
+
+	<h2>Press "Create Table" to Create Restaurant Tables</h2>
+	
+	@* Button to create a table *@
+	@form(routes.Tables.newTable()) {
+		<input type="submit" value="Create Table">
+	}
+	
+	@* Button to reset the numbering of tables *@
+	@form(routes.Tables.resetCount()) {
+		<input type="submit" value="Reset Table Count">
+	}
+	
+	<a href="http://localhost:9000/dashboard/1">Back to Dashboard</a> 
+}

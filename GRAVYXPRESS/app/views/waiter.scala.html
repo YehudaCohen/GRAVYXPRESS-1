@@ -1,0 +1,38 @@
+@(waiters: ArrayList[String])
+
+@* This is the template for a portion of the Waiter Interface. *@
+@* The ArrayList data structure contains a message to waiter   *@
+@* about an order when it is finished.                         *@
+
+@import helper._
+
+@* Main template begins here. *@
+@main("Waiter Interface") {&nbsp;} {
+
+	<h1>Waiter Interface</h1>
+	
+	@* The number of orders that are ready. *@
+	<h3>@waiters.size() orders are ready.</h3>
+	
+	@* Lists a message about an order with order ID when order is completed. *@
+	<ul>
+		@for(waiter <- waiters) {
+			<li>
+				@waiter
+				
+				@* Creates a button that deletes the completed order from interface *@
+				@* after the waiter delivers it to appropriate table.               *@
+				@form(routes.KitchenQueue.acknowledge(waiter)) {
+					<input type="submit" value="Acknowledged">
+				}
+			</li>
+		}
+	</ul>
+	
+	<a href="http://localhost:9000/dashboard/1">Back to Dashboard</a> 
+	
+	@* HTML code to refresh the page automatically every 5 seconds. *@
+	<META 
+     HTTP-EQUIV="Refresh"
+     CONTENT=5; URL="localhost:9000/waiter">
+}

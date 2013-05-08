@@ -1,0 +1,82 @@
+@(myRestaurant: Restaurant)
+
+@main(myRestaurant.name){
+	<style>
+      body {
+        padding: 40px;
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+ <script type="text/javascript">$(document).ready(function(){	
+ 	$("#about").hide();
+  $("#menu").hide();
+  $("#about-btn").click(function(){
+    $("#home").hide();
+    $("#menu").hide();
+    $("#about").show();
+    $("#about-btn").attr('class','active');
+    $("#home-btn").attr('class','');
+    $("#menu-btn").attr('class','');
+  });
+  $("#home-btn").click(function(){
+    $("#about").hide();
+    $("#home").show();
+    $("#menu").hide();
+    $("#home-btn").attr('class','active');
+    $("#about-btn").attr('class','');
+     $("#menu-btn").attr('class','');
+  });
+  $("#menu-btn").click(function(){
+    $("#about").hide();
+    $("#home").hide();
+    $("#menu").show();
+    $("#menu-btn").attr('class','active');
+    $("#about-btn").attr('class','');
+    $("#home-btn").attr('class','');
+  });
+}); </script>
+
+}{
+ 	<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+
+          
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a class="brand" href="#">@myRestaurant.name</a></li>
+              <li class="active" id="home-btn"><a href="#">Home</a></li>
+              <li id="about-btn"><a href="#about" >About</a></li>
+              <li id="menu-btn"><a href="#menu">Menu</a></li>
+              <li id="dashboard"><a href="/dashboard/@myRestaurant.id">Owner's Dashboard</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid span6">
+    <div class="container-fluid span6" id="home">
+
+      <h2>Hours of Operation</h2>
+      <p>@Html(myRestaurant.hours)</p>
+
+    </div>
+        <div class="container-fluid span6" id="about">
+
+      <h2>About</h2>
+      <p>@Html(myRestaurant.about)</p>
+
+    </div>
+
+    <div class="container-fluid span6" width="50" id="menu">
+      <p>
+      <pre width="50">@Html(myRestaurant.menu.display())</pre>
+    </p>
+    </div>
+  </div>
+}

@@ -1,0 +1,154 @@
+ @(myRestaurantForm: Form[Restaurant])
+
+@import helper._
+@import helper.twitterBootstrap._
+    @main("Dashboard"){
+    <style type="text/css">
+        .sidebar-nav-fixed {
+    padding: 9px 0;
+    position:fixed;
+    left:20px;
+    top:90px;
+    width:250px;
+}
+
+    .row-fluid > .span-fixed-sidebar {
+        margin-top:90px;
+        margin-left: 150px;
+    }
+section:before { 
+  display: block; 
+  content: " "; 
+  margin-top: -90px; 
+  height: 90px; 
+  visibility: hidden; 
+}
+h3:before{
+     display: block; 
+  content: " "; 
+  margin-top: -90px; 
+  height: 90px; 
+  visibility: hidden;  
+}
+
+    </style>
+
+}{  <div class=" navbar navbar-fixed-top">
+      <div class="navbar-inner">
+           <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+
+    <div class="row-fluid">
+        <div class="span10"><h3>GravyXpress -- 
+
+            <a href="/@myRestaurantForm.get().name">@myRestaurantForm.get().name</a> Dashboard</h3>
+        </div>
+        <div class="span2">
+        <a href="/logout">Logout</a>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="container-fluid">
+    <div class="row-fluid">
+    <div class= "sidebar-nav-fixed">
+
+    <!--Sidebar content-->
+    <a href="#about">About section</a>
+    <br>
+    <a href="#hours">Hours section</a>
+    <br>
+    <a href="#menu">Menu section</a>
+	<br>
+	<a href="http://localhost:9000/tables/">Build/View Restaurant Tables</a> 
+	<br>
+	<a href="http://localhost:9000/orderQueue/">View Order Queue Interface</a>
+	<br>
+	<a href="http://localhost:9000/kitchenQueue/">View Kitchen Interface</a> 
+	<br>
+	<a href="http://localhost:9000/waiter/">View Waiter's Pick-Up Orders List</a> 
+    </div>
+    <div class="span10 span-fixed-sidebar"> 
+        <section id="about">
+        @form(routes.Protected.updateAbout(myRestaurantForm.get().id.toString)) {
+        <div>
+            @textarea(field = myRestaurantForm("about"), args = 'class -> "field span8",'_label -> "About Us", 'value ->myRestaurantForm.get().about)
+            <input class="btn btn-medium" value="Save" type="submit">
+            
+        </div>
+    }</section>
+    <section id="hours">
+        @form(routes.Protected.updateHours(myRestaurantForm.get().id.toString)) {
+        <div >
+            @textarea(field = myRestaurantForm("hours"), args = 'class -> "field span8",'_label -> "Hours of Operation", 'value ->myRestaurantForm.get().hours)
+            <input class="btn btn-medium" value="Save" type="submit">
+            
+        </div>
+    }
+</section>
+
+<div>
+    <h3 id="menu">Menu</h3>
+        @form(routes.Protected.newCat(myRestaurantForm.get().id.toString)){
+        <div>
+            <label for="Add Category">New Category</label>
+            <input type="text" id="Add Category" name="Add Category" value="" placeholder="Category Name">
+            <input class="btn btn-small" value="Add" type="submit">
+            
+        </div>
+    }
+
+    @for(category <- myRestaurantForm.get().menu.categories){
+
+    <h4>@category.name</h4>
+    <div class="row-fluid">
+    @form(routes.Protected.removeCategory(myRestaurantForm.get().id.toString,category.id.toString), 'class-> "span2"){
+    <button name="delete" class="btn btn-small delete">Delete Category</button>}
+    @if(category.enabled) {
+         <form method="POST" class="span3" action="@routes.Protected.disableCat(myRestaurantForm.get().id.toString,category.id.toString)">
+        <button type="submit" name="disable"  class="btn btn-small">Disable Category</button>
+        </form>
+        } else {
+      <form class="span3" method="POST" action="@routes.Protected.enableCat(myRestaurantForm.get().id.toString,category.id.toString)"><button type="submit" name="disable"  class="btn btn-small">Enable Category</button>           
+        </form>
+    }
+</div>
+    @form(routes.Protected.newItem(myRestaurantForm.get().id.toString,category.id.toString)){
+        <div>
+            <label for="name">New Item</label>
+            <input type="text" id="Add Item" name="name" value="" placeholder="Name of Item">
+            <br>
+            <label for="price">Price</label>
+            <input type="text" id="price" name="price" value="" placeholder="0.00">
+            @textarea(field = myRestaurantForm("description"), args = 'class -> "field span8",'_label -> "Description")
+            <input type="submit" value="Add" class="btn btn-small">
+             
+        </div>
+    }
+     @for(menuItem <- category.items){
+        <p><pre width="50">@Html(menuItem.display())</pre>
+            <div class="row-fluid">
+            <form method="POST" class= "span2" action="@routes.Protected.removeItem(myRestaurantForm.get().id.toString,menuItem.id.toString)">
+            <button name="delete " class="btn btn-small">Delete Item</button>
+            </form>
+            @if(menuItem.enabled) {
+                 <form method="POST" action="@routes.Protected.disableItem(myRestaurantForm.get().id.toString,menuItem.id.toString)" class= "span2">
+                <button type="submit" name="disable"  class="btn btn-small">Disable Item</button>
+            </form>
+        } else {
+          <form method="POST" class= "span2" action="@routes.Protected.enableItem(myRestaurantForm.get().id.toString,menuItem.id.toString)"><button type="submit" name="disable"  class="btn btn-small">Enable Item</button>
+          </form>           
+    }
+        
+    </div> 
+    }
+}
+
+
+</div>
+
+    <!--Body content-->
+    </div>
+    </div>
+    </div>
+}

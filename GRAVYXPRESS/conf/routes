@@ -1,0 +1,52 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                            controllers.Application.index()
+
+POST	/							 controllers.Application.createRestaurant()
+
+GET		/login 						 controllers.Application.login()
+POST	/login					     controllers.Application.authenticate()
+
+GET		/logout						 controllers.Application.logout()
+
+GET		/dashboard/:id			   	 controllers.Protected.dashboard(id)
+
+POST	/dashboard/:id/about 		 controllers.Protected.updateAbout(id)
+POST	/dashboard/:id/hours 		 controllers.Protected.updateHours(id)
+POST	/dashboard/:id/newCat		 controllers.Protected.newCat(id)
+POST	/dashboard/:id/:cat/newItem	 controllers.Protected.newItem(id,cat)
+
+POST	/dashboard/:id/:menuItem/removeItem	 	 controllers.Protected.removeItem(id,menuItem)
+POST	/dashboard/:id/:cat/removeCategory	 	 controllers.Protected.removeCategory(id,cat)
+POST	/dashboard/:id/:item/enableItem	 	     controllers.Protected.enableItem(id,item)
+POST	/dashboard/:id/:item/disableItem 	     controllers.Protected.disableItem(id,item)
+
+POST	/dashboard/:id/:cat/enableCat	 	     controllers.Protected.enableCat(id,cat)
+POST	/dashboard/:id/:cat/disableCat 	     controllers.Protected.disableCat(id,cat)
+
+GET     /:restaurant                 controllers.Application.show(restaurant)
+
+GET     /kitchenQueue/              controllers.KitchenQueue.tasks()
+GET     /orderQueue/                controllers.OrderQueue.tasks()
+GET     /waiter/                    controllers.KitchenQueue.waiters()
+
+POST    /orderQueue                 controllers.OrderQueue.newTask()
+POST    /kitchenQueue/:id/move      controllers.KitchenQueue.moveTask(id: Long)
+POST    /orderQueue/:id/delete      controllers.OrderQueue.deleteTask(id: Long)
+POST    /kitchenQueue/:id/delete    controllers.KitchenQueue.completeTask(id: Long)
+POST    /waiter/:id/acknowledge     controllers.KitchenQueue.acknowledge(id: String)
+
+GET     /tables/                     	controllers.Tables.tasks()
+
+POST    /tables                     	controllers.Tables.newTable()
+POST	/tables/						controllers.Tables.resetCount()
+POST	/tables/:id/sitHere				controllers.Tables.sitHere(id: Long)
+POST	/tables/:id/customerLeft		controllers.Tables.customerLeft(id: Long)
+POST	/tables/:id/finishedCleaning	controllers.Tables.finishedCleaning(id: Long)
+POST    /tables/:id/delete          	controllers.Tables.deleteTask(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
